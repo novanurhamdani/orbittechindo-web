@@ -26,7 +26,7 @@ export default function MovieDetailPage() {
     return (
       <MainLayout>
         <PageTransition>
-          <div className="container mx-auto px-4 py-8">
+          <div className="container px-4 py-8">
             <motion.div
               className="animate-pulse"
               initial={{ opacity: 0 }}

@@ -22,15 +22,13 @@ export function MovieCarousel({
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) {
-        setSlidesPerView(7); // 7 slides on xl screens (1280px+)
+        setSlidesPerView(5); // 7 slides on xl screens (1280px+)
       } else if (window.innerWidth >= 1024) {
-        setSlidesPerView(6); // 6 slides on lg screens (1024px+)
+        setSlidesPerView(4); // 6 slides on lg screens (1024px+)
       } else if (window.innerWidth >= 768) {
-        setSlidesPerView(4); // 4 slides on md screens (768px+)
+        setSlidesPerView(2); // 4 slides on md screens (768px+)
       } else if (window.innerWidth >= 640) {
-        setSlidesPerView(3); // 3 slides on sm screens (640px+)
-      } else {
-        setSlidesPerView(2); // 2 slides on smaller screens
+        setSlidesPerView(1); // 3 slides on sm screens (640px+)
       }
     };
 
@@ -62,7 +60,11 @@ export function MovieCarousel({
 
   return (
     <div className="relative mb-8">
-      {title && <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>}
+      {title && (
+        <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#D00000] to-[#DC2F02] bg-clip-text text-transparent inline-block">
+          {title}
+        </h2>
+      )}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {movies.map((movie) => {
@@ -72,25 +74,27 @@ export function MovieCarousel({
             return (
               <div
                 key={movie.imdbID}
-                className="relative min-w-0 cursor-pointer px-1"
+                className="relative min-w-0 cursor-pointer px-1 group"
                 style={{ flex: `0 0 ${slideWidth}` }}
                 onClick={() => router.push(`/movies/${movie.imdbID}`)}
               >
-                <div className="relative aspect-[2/3] w-full rounded-md overflow-hidden">
+                <div className="relative aspect-[2/3] w-full rounded-md overflow-hidden glass-card">
                   <Image
                     src={posterUrl}
                     alt={movie.Title}
                     fill
                     priority
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 25vw, (max-width: 1024px) 16.67vw, (max-width: 1280px) 14.28vw, 12.5vw"
-                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 p-2 w-full">
-                      <h3 className="text-xs font-bold text-white truncate">
-                        {movie.Title}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#030711]/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-0 left-0 p-3 w-full backdrop-blur-sm bg-[#030711]/30">
+                      <h3 className="text-sm font-bold text-white/90 overflow-hidden">
+                        {movie.Title.length > 20
+                          ? `${movie.Title.slice(0, 20)}...`
+                          : movie.Title}
                       </h3>
-                      <p className="text-white/80 text-xs">{movie.Year}</p>
+                      <p className="text-[#FFBA08] text-xs">{movie.Year}</p>
                     </div>
                   </div>
                 </div>
@@ -101,21 +105,21 @@ export function MovieCarousel({
       </div>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
-        className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/30 text-white hover:bg-black/50 z-10 h-8 w-8 rounded-full"
+        className="absolute left-0 top-1/2 -translate-y-1/2 glass text-white hover:bg-[#E85D04]/20 hover:text-white z-10 h-10 w-10 rounded-full cursor-pointer"
         onClick={scrollPrev}
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="h-5 w-5" />
       </Button>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
-        className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/30 text-white hover:bg-black/50 z-10 h-8 w-8 rounded-full"
+        className="absolute right-0 top-1/2 -translate-y-1/2 glass text-white hover:bg-[#E85D04]/20 hover:text-white z-10 h-10 w-10 rounded-full cursor-pointer"
         onClick={scrollNext}
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="h-5 w-5" />
       </Button>
     </div>
   );
