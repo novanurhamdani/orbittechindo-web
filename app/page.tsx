@@ -16,14 +16,14 @@ import { MovieFilter } from "@/types";
 export default function Home() {
   const { featuredMovies, isLoading: isFeaturedLoading } = useFeaturedMovies();
   const { search, isLoading: isSearchLoading } = useMovieSearch();
-  const { 
-    movies: allMovies, 
+  const {
+    movies: allMovies,
     isLoading: isAllMoviesLoading,
     currentPage: allMoviesPage,
     totalPages: allMoviesTotalPages,
-    handlePageChange: handleAllMoviesPageChange
+    handlePageChange: handleAllMoviesPageChange,
   } = useAllMovies();
-  
+
   const {
     searchQuery,
     searchResults,
@@ -54,15 +54,13 @@ export default function Home() {
   // Handle filter change
   const handleFilterChange = (newFilter: MovieFilter) => {
     setFilter(newFilter);
-    search(searchQuery, 1, newFilter);
     setCurrentPage(1);
+    search(searchQuery, 1, newFilter);
   };
 
   // Initial search if query exists
   useEffect(() => {
-    if (searchQuery) {
-      search(searchQuery, currentPage, filter);
-    }
+    if (searchQuery) search(searchQuery, currentPage, filter);
   }, [searchQuery, currentPage, filter, search]);
 
   return (
@@ -84,34 +82,26 @@ export default function Home() {
           </section>
         )}
 
-        {/* Search section */}
+        {/* Movie section */}
         <section className="mb-8">
-          <div className="mb-6">
-            <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
-          </div>
+          <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
 
           {searchQuery ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Filters */}
-              <div className="md:col-span-1">
-                <MovieFilters
-                  initialFilter={filter}
-                  onFilterChange={handleFilterChange}
-                />
-              </div>
+              <MovieFilters
+                initialFilter={filter}
+                onFilterChange={handleFilterChange}
+              />
 
               {/* Results */}
               <div className="md:col-span-3">
-                <div className="mb-4">
-                  <h2 className="text-xl font-semibold">
-                    {isSearchLoading
-                      ? "Searching..."
-                      : `Results for "${searchQuery}" (${totalResults} found)`}
-                  </h2>
-                </div>
-
+                <h2 className="text-xl font-semibold mb-4">
+                  {isSearchLoading
+                    ? "Searching..."
+                    : `Results for "${searchQuery}" (${totalResults} found)`}
+                </h2>
                 <MovieGrid movies={searchResults} isLoading={isSearchLoading} />
-
                 {totalResults > 0 && (
                   <Pagination
                     currentPage={currentPage}
@@ -123,21 +113,14 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">All Movies</h2>
-              </div>
-              <MovieGrid
-                movies={allMovies}
-                isLoading={isAllMoviesLoading}
-              />
+              <h2 className="text-xl font-semibold mb-4">All Movies</h2>
+              <MovieGrid movies={allMovies} isLoading={isAllMoviesLoading} />
               {allMoviesTotalPages > 0 && (
-                <div className="mt-6">
-                  <Pagination
-                    currentPage={allMoviesPage}
-                    totalPages={allMoviesTotalPages}
-                    onPageChange={handleAllMoviesPageChange}
-                  />
-                </div>
+                <Pagination
+                  currentPage={allMoviesPage}
+                  totalPages={allMoviesTotalPages}
+                  onPageChange={handleAllMoviesPageChange}
+                />
               )}
             </div>
           )}
