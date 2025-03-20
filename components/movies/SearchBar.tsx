@@ -20,7 +20,10 @@ export function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-3xl mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-3xl mx-auto mb-8"
+    >
       <div className="relative flex-grow">
         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none z-10">
           <Search className="h-5 w-5 text-[#E85D04]" />

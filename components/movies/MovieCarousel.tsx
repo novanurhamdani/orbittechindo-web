@@ -22,15 +22,13 @@ export function MovieCarousel({
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) {
-        setSlidesPerView(7); // 7 slides on xl screens (1280px+)
+        setSlidesPerView(5); // 7 slides on xl screens (1280px+)
       } else if (window.innerWidth >= 1024) {
-        setSlidesPerView(6); // 6 slides on lg screens (1024px+)
+        setSlidesPerView(4); // 6 slides on lg screens (1024px+)
       } else if (window.innerWidth >= 768) {
-        setSlidesPerView(4); // 4 slides on md screens (768px+)
+        setSlidesPerView(2); // 4 slides on md screens (768px+)
       } else if (window.innerWidth >= 640) {
-        setSlidesPerView(3); // 3 slides on sm screens (640px+)
-      } else {
-        setSlidesPerView(2); // 2 slides on smaller screens
+        setSlidesPerView(1); // 3 slides on sm screens (640px+)
       }
     };
 
@@ -62,7 +60,11 @@ export function MovieCarousel({
 
   return (
     <div className="relative mb-8">
-      {title && <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#D00000] to-[#DC2F02] bg-clip-text text-transparent inline-block">{title}</h2>}
+      {title && (
+        <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#D00000] to-[#DC2F02] bg-clip-text text-transparent inline-block">
+          {title}
+        </h2>
+      )}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {movies.map((movie) => {

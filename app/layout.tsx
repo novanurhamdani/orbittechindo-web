@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Providers } from "@/lib/providers";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Rubik } from "next/font/google";
 
-const inter = Inter({
+const rubik = Rubik({
   subsets: ["latin"],
   display: "swap",
 });
@@ -24,7 +24,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body
-        className={`min-h-screen bg-[#030711] text-white ${inter.className} antialiased`}
+        className={`min-h-screen bg-[#030711] text-white ${rubik.className} antialiased`}
         style={{
           backgroundImage:
             "radial-gradient(circle at 10% 20%, rgba(55, 6, 23, 0.3) 0%, rgba(3, 7, 17, 0.5) 90%)",

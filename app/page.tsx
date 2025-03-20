@@ -132,15 +132,26 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <h2 className="text-xl font-semibold mb-4">All Movies</h2>
-              <MovieGrid movies={allMovies} isLoading={isAllMoviesLoading} />
-              {allMoviesTotalPages > 0 && (
-                <Pagination
-                  currentPage={allMoviesPage}
-                  totalPages={allMoviesTotalPages}
-                  onPageChange={handleAllMoviesPageChange}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <MovieFilters
+                  initialFilter={filter}
+                  onFilterChange={handleFilterChange}
                 />
-              )}
+                <div className="md:col-span-3">
+                  <h2 className="text-xl font-semibold mb-4">All Movies</h2>
+                  <MovieGrid
+                    movies={allMovies}
+                    isLoading={isAllMoviesLoading}
+                  />
+                  {allMoviesTotalPages > 0 && (
+                    <Pagination
+                      currentPage={allMoviesPage}
+                      totalPages={allMoviesTotalPages}
+                      onPageChange={handleAllMoviesPageChange}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </section>

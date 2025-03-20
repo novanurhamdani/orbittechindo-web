@@ -37,12 +37,12 @@ export function Header() {
 
   return (
     <motion.header
-      className="bg-background border-b sticky top-0 z-10"
+      className="bg-background glass sticky top-0 z-10"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
     >
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="container  mx-auto px-4 py-3 flex items-center justify-between">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
             href="/"
@@ -59,7 +59,7 @@ export function Header() {
               href="/"
               className={`transition-colors ${
                 pathname === "/"
-                  ? "text-primary font-medium"
+                  ? "font-medium !bg-gradient-to-r !from-[#D00000] !to-[#DC2F02] hover:!from-[#DC2F02] hover:!to-[#E85D04] text-white px-4 py-2 rounded-md"
                   : "text-foreground"
               }`}
               onClick={handleHomeClick}
@@ -74,7 +74,7 @@ export function Header() {
                 href="/favorites"
                 className={`transition-colors flex items-center gap-1 ${
                   pathname === "/favorites"
-                    ? "text-primary font-medium"
+                    ? "font-medium !bg-gradient-to-r !from-[#D00000] !to-[#DC2F02] hover:!from-[#DC2F02] hover:!to-[#E85D04] text-white px-4 py-2 rounded-md"
                     : "text-foreground"
                 }`}
               >
@@ -112,7 +112,7 @@ export function Header() {
                   href="/auth/login"
                   className={`transition-colors ${
                     pathname === "/auth/login"
-                      ? "text-primary font-medium"
+                      ? "font-medium !bg-gradient-to-r !from-[#D00000] !to-[#DC2F02] hover:!from-[#DC2F02] hover:!to-[#E85D04] text-white px-4 py-2 rounded-md"
                       : "text-foreground"
                   }`}
                 >
@@ -123,9 +123,16 @@ export function Header() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button asChild>
-                  <Link href="/auth/register">Register</Link>
-                </Button>
+                <Link
+                  href="/auth/register"
+                  className={`transition-colors ${
+                    pathname === "/auth/register"
+                      ? "font-medium !bg-gradient-to-r !from-[#D00000] !to-[#DC2F02] hover:!from-[#DC2F02] hover:!to-[#E85D04] text-white px-4 py-2 rounded-md"
+                      : "text-foreground"
+                  }`}
+                >
+                  Register
+                </Link>
               </motion.div>
             </>
           )}
