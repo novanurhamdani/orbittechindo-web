@@ -50,19 +50,19 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
   };
 
   return (
-    <div className="bg-card p-4 rounded-lg shadow-sm">
-      <h3 className="text-lg font-medium mb-4">Filters</h3>
+    <div className="glass-card p-5 rounded-lg shadow-lg">
+      <h3 className="text-lg font-medium mb-5 text-white/90">Filters</h3>
       
       {/* Type filter */}
       <div className="mb-6">
-        <label htmlFor="type-filter" className="block text-sm font-medium mb-2">
+        <label htmlFor="type-filter" className="block text-sm font-medium mb-2 text-white/80">
           Type
         </label>
         <select
           id="type-filter"
           value={filter.type || ""}
           onChange={handleTypeChange}
-          className="w-full p-2 border rounded bg-background border-input focus:outline-none focus:ring-2 focus:ring-primary"
+          className="glass-input w-full p-3 text-white focus:outline-none focus:ring-2 focus:ring-[#E85D04] transition-all duration-300"
         >
           {movieTypes.map((type) => (
             <option key={type.value} value={type.value}>
@@ -74,14 +74,14 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
       
       {/* Year filter */}
       <div>
-        <label htmlFor="year-filter" className="block text-sm font-medium mb-2">
+        <label htmlFor="year-filter" className="block text-sm font-medium mb-2 text-white/80">
           Year
         </label>
         <select
           id="year-filter"
           value={filter.year?.toString() || ""}
           onChange={handleYearChange}
-          className="w-full p-2 border rounded bg-background border-input focus:outline-none focus:ring-2 focus:ring-primary"
+          className="glass-input w-full p-3 text-white focus:outline-none focus:ring-2 focus:ring-[#E85D04] transition-all duration-300"
         >
           {years.map((year) => (
             <option key={year.label} value={year.value?.toString() || ""}>

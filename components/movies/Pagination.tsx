@@ -73,6 +73,7 @@ export function Pagination({
             size="icon"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
+            className="cursor-pointer"
             aria-label="Previous page"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -86,7 +87,7 @@ export function Pagination({
               <span className="px-3 py-2">...</span>
             ) : (
               <Button
-                variant={currentPage === page ? "default" : "outline"}
+                variant={currentPage === page ? "orange" : "outline"}
                 onClick={() => typeof page === "number" && onPageChange(page)}
                 className="min-w-[40px]"
               >
@@ -104,6 +105,7 @@ export function Pagination({
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             aria-label="Next page"
+            className="cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
