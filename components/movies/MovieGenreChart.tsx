@@ -59,7 +59,6 @@ export function MovieGenreChart({
               fill="#9D0208"
               paddingAngle={5}
               dataKey="value"
-              label={({ name }) => name}
               labelLine={false}
             >
               {data.map((entry, index) => (
