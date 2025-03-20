@@ -29,18 +29,15 @@ export function MovieGenreChart({
 
   // Colors for the pie chart segments
   const COLORS = [
-    "#8884d8",
-    "#83a6ed",
-    "#8dd1e1",
-    "#82ca9d",
-    "#a4de6c",
-    "#d0ed57",
-    "#ffc658",
-    "#ff8042",
-    "#ff6361",
-    "#bc5090",
-    "#58508d",
-    "#003f5c",
+    // "#370617",
+    // "#6A040F",
+    "#9D0208",
+    "#D00000",
+    "#DC2F02",
+    "#E85D04",
+    "#F48C06",
+    "#FAA307",
+    "#FFBA08",
   ];
 
   if (!data || data.length === 0) {
@@ -59,7 +56,7 @@ export function MovieGenreChart({
               cy="50%"
               innerRadius={60}
               outerRadius={80}
-              fill="#8884d8"
+              fill="#9D0208"
               paddingAngle={5}
               dataKey="value"
               label={({ name }) => name}
@@ -74,7 +71,7 @@ export function MovieGenreChart({
             </Pie>
             <Tooltip
               formatter={(value, name) => [`${name}`]}
-              contentStyle={{ backgroundColor: "hsl(var(--card))" }}
+              contentStyle={{ backgroundColor: "white" }}
             />
             <Legend />
           </PieChart>
