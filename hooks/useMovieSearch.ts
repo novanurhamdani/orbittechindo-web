@@ -48,7 +48,7 @@ export function useMovieSearch(initialQuery = "") {
     setIsLoading(isLoading);
 
     if (data) {
-      if (data.Response === "True" && data.Search) {
+      if (data.Response === "True" && data.Search && data.totalResults) {
         // Make sure we convert totalResults to a number and pass it to the store
         const totalResults = parseInt(data.totalResults || "0", 10);
 
@@ -71,6 +71,7 @@ export function useMovieSearch(initialQuery = "") {
     if (
       data?.Response === "True" &&
       data.Search &&
+      data.totalResults &&
       filter.yearStart &&
       filter.yearEnd
     ) {
@@ -104,9 +105,10 @@ export function useMovieSearch(initialQuery = "") {
 
   return {
     searchQuery,
-    setSearchQuery,
+    results: data?.Search || [],
+    totalResults: data?.totalResults ? parseInt(data.totalResults, 10) : 0,
     isLoading,
-    error: error ? (error as Error).message : null,
+    error: error ? (error as Error).message : data?.Error || null,
     search,
   };
 }

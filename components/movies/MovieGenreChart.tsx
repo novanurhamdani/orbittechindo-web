@@ -10,11 +10,16 @@ import { MovieDetail } from "@/types";
 import { formatGenres } from "@/lib/utils/format";
 
 interface MovieGenreChartProps {
-  movie: MovieDetail;
+  movie?: MovieDetail;
+  genres?: string[];
 }
 
-export function MovieGenreChart({ movie }: MovieGenreChartProps) {
-  const genres = formatGenres(movie.Genre);
+export function MovieGenreChart({
+  movie,
+  genres: genresProp,
+}: MovieGenreChartProps) {
+  // Use provided genres or extract from movie
+  const genres = genresProp || (movie ? formatGenres(movie.Genre) : []);
 
   // Create data for the pie chart
   const data = genres.map((genre) => ({
@@ -43,33 +48,38 @@ export function MovieGenreChart({ movie }: MovieGenreChartProps) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-          label={({ name, percent }) =>
-            `${name} ${(percent * 100).toFixed(0)}%`
-          }
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip
-          formatter={(value, name) => [name, ""]}
-          contentStyle={{
-            backgroundColor: "var(--background)",
-            border: "1px solid var(--border)",
-          }}
-        />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="bg-card p-4 rounded-lg shadow">
+      <h3 className="text-lg font-medium mb-2">Genre Distribution</h3>
+      <div className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={80}
+              fill="#8884d8"
+              paddingAngle={5}
+              dataKey="value"
+              label={({ name }) => name}
+              labelLine={false}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value, name) => [`${name}`]}
+              contentStyle={{ backgroundColor: "hsl(var(--card))" }}
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
