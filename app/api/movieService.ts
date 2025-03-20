@@ -1,44 +1,59 @@
 import apiClient from "./axios";
-import { MovieDetail, SearchResponse, MovieFilter } from "@/types";
+import { MovieFilter, SearchResponse } from "@/types";
 
 export const movieService = {
   // Search movies by title
-  searchMovies: async (title: string, page = 1, filter?: MovieFilter) => {
-    const params: Record<string, string | number> = {
-      s: title,
-      page,
-    };
+  searchMovies: async (
+    query: string,
+    page = 1,
+    filter: MovieFilter = {}
+  ): Promise<SearchResponse> => {
+    try {
+      const params: Record<string, string | number> = {
+        s: query,
+        page,
+      };
 
-    // Add type filter if provided
-    if (filter?.type) {
-      params.type = filter.type;
+      // Add type filter if specified
+      if (filter.type) {
+        params.type = filter.type;
+      }
+
+      // Year filter (OMDb only supports exact year, not range)
+      // We'll handle year ranges in the client
+      if (filter.yearStart && filter.yearStart === filter.yearEnd) {
+        params.y = filter.yearStart;
+      }
+
+      const response = await apiClient.get<SearchResponse>("", { params });
+      return response.data;
+    } catch (error) {
+      console.error("Error searching movies:", error);
+      return {
+        Search: [],
+        totalResults: "0",
+        Response: "False",
+        Error: "Failed to fetch movies",
+      };
     }
-
-    // Add year filter if both start and end are provided
-    if (filter?.yearStart && filter?.yearEnd) {
-      // OMDb API doesn't support year range directly, so I'll filter on the client side
-      // I'll just use the start year as a base filter
-      params.y = filter.yearStart;
-    }
-
-    const response = await apiClient.get<SearchResponse>("", { params });
-    return response.data;
   },
 
   // Get movie details by ID
-  getMovieById: async (imdbId: string) => {
-    const params = {
-      i: imdbId,
-      plot: "full",
-    };
-
-    const response = await apiClient.get<MovieDetail>("", { params });
-    return response.data;
+  getMovieById: async (id: string) => {
+    try {
+      const response = await apiClient.get("", {
+        params: { i: id, plot: "full" },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+      throw error;
+    }
   },
 
   // Get featured movies (for carousel)
   getFeaturedMovies: async () => {
-    // Since OMDb doesn't have a featured endpoint, we'll use some popular movie titles
+    // Get a few featured movies by searching for popular titles
     const featuredTitles = [
       "Inception",
       "Interstellar",
@@ -60,6 +75,26 @@ export const movieService = {
     return responses
       .map((response) => response.data.Search?.[1])
       .filter((movie) => movie !== undefined);
+  },
+
+  getAllMovies: async (page = 1): Promise<SearchResponse> => {
+    try {
+      const params: Record<string, string | number> = {
+        s: "movie",
+        page,
+      };
+
+      const response = await apiClient.get<SearchResponse>("", { params });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching all movies:", error);
+      return {
+        Search: [],
+        totalResults: "0",
+        Response: "False",
+        Error: "Failed to fetch movies",
+      };
+    }
   },
 };
 

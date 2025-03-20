@@ -9,13 +9,21 @@ import {
   MovieFilters,
   Pagination,
 } from "../components/movies";
-import { useFeaturedMovies, useMovieSearch } from "@/hooks";
+import { useFeaturedMovies, useMovieSearch, useAllMovies } from "@/hooks";
 import { useMovieStore } from "@/lib/store";
 import { MovieFilter } from "@/types";
 
 export default function Home() {
   const { featuredMovies, isLoading: isFeaturedLoading } = useFeaturedMovies();
   const { search, isLoading: isSearchLoading } = useMovieSearch();
+  const { 
+    movies: allMovies, 
+    isLoading: isAllMoviesLoading,
+    currentPage: allMoviesPage,
+    totalPages: allMoviesTotalPages,
+    handlePageChange: handleAllMoviesPageChange
+  } = useAllMovies();
+  
   const {
     searchQuery,
     searchResults,
@@ -82,7 +90,7 @@ export default function Home() {
             <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
           </div>
 
-          {searchQuery && (
+          {searchQuery ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Filters */}
               <div className="md:col-span-1">
@@ -112,6 +120,25 @@ export default function Home() {
                   />
                 )}
               </div>
+            </div>
+          ) : (
+            <div>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold">All Movies</h2>
+              </div>
+              <MovieGrid
+                movies={allMovies}
+                isLoading={isAllMoviesLoading}
+              />
+              {allMoviesTotalPages > 0 && (
+                <div className="mt-6">
+                  <Pagination
+                    currentPage={allMoviesPage}
+                    totalPages={allMoviesTotalPages}
+                    onPageChange={handleAllMoviesPageChange}
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>
