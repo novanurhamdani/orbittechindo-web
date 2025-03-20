@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { MainLayout } from "@/components/layout";
 import {
   MovieCarousel,
@@ -35,33 +35,49 @@ export default function Home() {
     setFilter,
   } = useMovieStore();
 
-  // Calculate total pages
+  // Calculate total pages for search results
   const totalPages = Math.ceil(totalResults / 10);
+  
+  // For debugging
+  console.log('Search data:', { searchResults, totalResults, totalPages });
 
   // Handle search submission
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setCurrentPage(1);
-    search(query, 1, filter);
-  };
+  const handleSearch = useCallback(
+    (query: string) => {
+      if (!query.trim()) {
+        setSearchQuery("");
+        return;
+      }
+
+      setSearchQuery(query);
+      setCurrentPage(1);
+      search(query, 1, filter);
+    },
+    [filter, search, setCurrentPage, setSearchQuery]
+  );
 
   // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    search(searchQuery, page, filter);
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (!searchQuery.trim()) return;
+
+      setCurrentPage(page);
+      search(searchQuery, page, filter);
+    },
+    [filter, search, searchQuery, setCurrentPage]
+  );
 
   // Handle filter change
-  const handleFilterChange = (newFilter: MovieFilter) => {
-    setFilter(newFilter);
-    setCurrentPage(1);
-    search(searchQuery, 1, newFilter);
-  };
+  const handleFilterChange = useCallback(
+    (newFilter: MovieFilter) => {
+      if (!searchQuery.trim()) return;
 
-  // Initial search if query exists
-  useEffect(() => {
-    if (searchQuery) search(searchQuery, currentPage, filter);
-  }, [searchQuery, currentPage, filter, search]);
+      setFilter(newFilter);
+      setCurrentPage(1);
+      search(searchQuery, 1, newFilter);
+    },
+    [search, searchQuery, setCurrentPage, setFilter]
+  );
 
   return (
     <MainLayout>

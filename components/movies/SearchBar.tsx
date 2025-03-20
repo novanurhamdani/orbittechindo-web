@@ -12,9 +12,7 @@ export function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-    }
+    onSearch(query.trim());
   };
 
   return (

@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { movieService } from "@/app/api";
 import { useMovieStore } from "@/lib/store";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { MovieFilter, SearchResponse } from "@/types";
 
 export function useMovieSearch(initialQuery = "") {
@@ -19,7 +19,7 @@ export function useMovieSearch(initialQuery = "") {
 
   // Set initial query if provided
   useEffect(() => {
-    if (initialQuery && !searchQuery) {
+    if (initialQuery && !searchQuery && initialQuery.trim()) {
       setSearchQuery(initialQuery);
     }
   }, [initialQuery, searchQuery, setSearchQuery]);
@@ -27,8 +27,19 @@ export function useMovieSearch(initialQuery = "") {
   // Use TanStack Query for data fetching
   const { data, isLoading, error, refetch } = useQuery<SearchResponse>({
     queryKey: ["movies", searchQuery, currentPage, filter],
-    queryFn: () => movieService.searchMovies(searchQuery, currentPage, filter),
-    enabled: searchQuery.length > 0,
+    queryFn: () => {
+      // Double check to make sure we never search with empty string
+      if (!searchQuery.trim()) {
+        return Promise.resolve({
+          Search: [],
+          totalResults: "0",
+          Response: "False",
+          Error: "Empty search query",
+        });
+      }
+      return movieService.searchMovies(searchQuery, currentPage, filter);
+    },
+    enabled: searchQuery.length > 0 && searchQuery.trim().length > 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -38,7 +49,10 @@ export function useMovieSearch(initialQuery = "") {
 
     if (data) {
       if (data.Response === "True" && data.Search) {
-        setSearchResults(data.Search, parseInt(data.totalResults || "0"));
+        // Make sure we convert totalResults to a number and pass it to the store
+        const totalResults = parseInt(data.totalResults || "0", 10);
+
+        setSearchResults(data.Search, totalResults);
         setError(null);
       } else {
         setSearchResults([], 0);
@@ -65,18 +79,28 @@ export function useMovieSearch(initialQuery = "") {
         return year >= filter.yearStart! && year <= filter.yearEnd!;
       });
 
-      setSearchResults(filteredResults, filteredResults.length);
+      setSearchResults(filteredResults, parseInt(data.totalResults || "0"));
     }
   }, [data, filter.yearStart, filter.yearEnd, setSearchResults]);
 
   // Function to manually trigger a search
-  const search = (query: string, page: number, filter: MovieFilter) => {
-    setSearchQuery(query);
-    queryClient.invalidateQueries({
-      queryKey: ["movies", query, page, filter],
-    });
-    return refetch();
-  };
+  const search = useCallback(
+    (query: string, page: number, filter: MovieFilter) => {
+      // Only proceed if query is not empty
+      if (!query.trim()) {
+        setSearchResults([], 0);
+        setSearchQuery("");
+        return Promise.resolve();
+      }
+
+      setSearchQuery(query);
+      queryClient.invalidateQueries({
+        queryKey: ["movies", query, page, filter],
+      });
+      return refetch();
+    },
+    [queryClient, refetch, setSearchQuery, setSearchResults]
+  );
 
   return {
     searchQuery,
