@@ -37,9 +37,6 @@ export default function Home() {
 
   // Calculate total pages for search results
   const totalPages = Math.ceil(totalResults / 10);
-  
-  // For debugging
-  console.log('Search data:', { searchResults, totalResults, totalPages });
 
   // Handle search submission
   const handleSearch = useCallback(
@@ -63,6 +60,12 @@ export default function Home() {
 
       setCurrentPage(page);
       search(searchQuery, page, filter);
+
+      // Scroll to top of the page
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
     [filter, search, searchQuery, setCurrentPage]
   );

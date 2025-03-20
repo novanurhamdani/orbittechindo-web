@@ -25,6 +25,12 @@ export function useAllMovies() {
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    
+    // Scroll to top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
 
   return {
