@@ -2,6 +2,14 @@
 
 A modern web application for discovering and exploring movies using the OMDB API. This project features a sleek UI with glassmorphism design, user authentication, movie search functionality, favorites management, and detailed movie information.
 
+## Demo Live Preview
+[Movie APP Demo](https://orbittechindo-web.vercel.app/)
+
+Demo Login
+
+- user: `test@example.com`
+- pass: `password123`
+
 ## Features
 
 - **User Authentication**: Secure login and registration with form validation
