@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { movieService } from "@/app/api";
 
 export function useAllMovies() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["allMovies", currentPage],
     queryFn: async () => {
       const response = await movieService.getAllMovies(currentPage);
@@ -17,7 +17,14 @@ export function useAllMovies() {
       return [];
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
+
+  // Refetch when the page changes
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   // Calculate total pages
   const totalPages = Math.ceil(totalResults / 10);
@@ -25,11 +32,11 @@ export function useAllMovies() {
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    
+
     // Scroll to top of the page
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
 

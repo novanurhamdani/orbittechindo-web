@@ -82,6 +82,9 @@ export default function Home() {
     [search, searchQuery, setCurrentPage, setFilter]
   );
 
+  console.log({ searchResults });
+  console.log({ totalResults });
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8">
