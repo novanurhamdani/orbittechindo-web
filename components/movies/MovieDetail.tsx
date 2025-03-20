@@ -95,22 +95,36 @@ export function MovieDetail({ movie }: MovieDetailProps) {
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Ratings */}
-            {movie.Ratings && movie.Ratings.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2">Ratings</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <MovieRatingChart movie={movie} />
+          {/* Data Visualization Section */}
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Movie Insights</h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Genre Distribution Chart */}
+              <div className="bg-card p-6 rounded-lg shadow">
+                <h3 className="text-xl font-semibold mb-4">
+                  Genre Distribution
+                </h3>
+                <div className="h-64 md:h-80">
+                  <MovieGenreChart movie={movie} />
                 </div>
               </div>
-            )}
 
-            {/* Genre distribution */}
-            <div>
-              <h3 className="text-lg font-medium mb-2">Genre Distribution</h3>
-              <div className="h-64">
-                <MovieGenreChart movie={movie} />
+              {/* Ratings Chart */}
+              <div className="bg-card p-6 rounded-lg shadow">
+                <h3 className="text-xl font-semibold mb-4">
+                  Ratings Comparison
+                </h3>
+                <div className="h-64 md:h-80">
+                  <h3 className="text-lg font-medium mb-2">
+                    Genre Distribution
+                  </h3>
+                  <div className="h-64">
+                    <MovieRatingChart movie={movie} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
