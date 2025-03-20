@@ -22,6 +22,7 @@ export default function Home() {
     currentPage: allMoviesPage,
     totalPages: allMoviesTotalPages,
     handlePageChange: handleAllMoviesPageChange,
+    handleFilterChange: handleAllMoviesFilterChange,
   } = useAllMovies();
 
   const {
@@ -53,7 +54,7 @@ export default function Home() {
     [filter, search, setCurrentPage, setSearchQuery]
   );
 
-  // Handle page change
+  // Handle page change for search results
   const handlePageChange = useCallback(
     (page: number) => {
       if (!searchQuery.trim()) return;
@@ -70,7 +71,7 @@ export default function Home() {
     [filter, search, searchQuery, setCurrentPage]
   );
 
-  // Handle filter change
+  // Handle filter change for search results
   const handleFilterChange = useCallback(
     (newFilter: MovieFilter) => {
       if (!searchQuery.trim()) return;
@@ -107,7 +108,7 @@ export default function Home() {
 
           {searchQuery ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Filters */}
+              {/* Filters for search results */}
               <MovieFilters
                 initialFilter={filter}
                 onFilterChange={handleFilterChange}
@@ -133,9 +134,10 @@ export default function Home() {
           ) : (
             <div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {/* Filters for all movies */}
                 <MovieFilters
-                  initialFilter={filter}
-                  onFilterChange={handleFilterChange}
+                  initialFilter={{}}
+                  onFilterChange={handleAllMoviesFilterChange}
                 />
                 <div className="md:col-span-3">
                   <h2 className="text-xl font-semibold mb-4">All Movies</h2>

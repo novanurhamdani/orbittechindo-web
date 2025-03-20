@@ -76,12 +76,25 @@ export const movieService = {
       .filter((movie) => movie !== undefined);
   },
 
-  getAllMovies: async (page = 1): Promise<SearchResponse> => {
+  getAllMovies: async (
+    page = 1,
+    filter: MovieFilter = {}
+  ): Promise<SearchResponse> => {
     try {
       const params: Record<string, string | number> = {
         s: "movie",
         page,
       };
+
+      // Add type filter if specified
+      if (filter.type) {
+        params.type = filter.type;
+      }
+
+      // Add year filter if specified
+      if (filter.year) {
+        params.y = filter.year;
+      }
 
       const response = await apiClient.get<SearchResponse>("", { params });
       return response.data;
