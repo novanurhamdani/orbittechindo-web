@@ -43,6 +43,5 @@ export interface SearchResponse {
 
 export interface MovieFilter {
   type?: string;
-  yearStart?: number;
-  yearEnd?: number;
+  year?: number;
 }

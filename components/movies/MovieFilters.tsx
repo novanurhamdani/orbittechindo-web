@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import * as Slider from "@radix-ui/react-slider";
 import { MovieFilter } from "@/types";
 
 interface MovieFiltersProps {
@@ -18,6 +17,15 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
     { value: "series", label: "Series" },
     { value: "episode", label: "Episodes" },
   ];
+  
+  // Generate years from 1970 to current year
+  const years = [
+    { value: undefined, label: "All Years" },
+    ...Array.from({ length: currentYear - 1970 + 1 }, (_, i) => {
+      const year = currentYear - i;
+      return { value: year, label: year.toString() };
+    }),
+  ];
 
   // Update parent component when filter changes
   useEffect(() => {
@@ -32,12 +40,12 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
     }));
   };
 
-  // Handle year range change
-  const handleYearChange = (values: number[]) => {
+  // Handle year change
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const yearValue = e.target.value ? parseInt(e.target.value) : undefined;
     setFilter((prev) => ({
       ...prev,
-      yearStart: values[0],
-      yearEnd: values[1],
+      year: yearValue,
     }));
   };
 
@@ -64,35 +72,23 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
         </select>
       </div>
       
-      {/* Year range filter */}
+      {/* Year filter */}
       <div>
-        <label className="block text-sm font-medium mb-2">
-          Year Range: {filter.yearStart} - {filter.yearEnd}
+        <label htmlFor="year-filter" className="block text-sm font-medium mb-2">
+          Year
         </label>
-        <Slider.Root
-          className="relative flex items-center select-none touch-none w-full h-5"
-          value={[filter.yearStart || 1900, filter.yearEnd || currentYear]}
-          min={1900}
-          max={currentYear}
-          step={1}
-          onValueChange={handleYearChange}
+        <select
+          id="year-filter"
+          value={filter.year?.toString() || ""}
+          onChange={handleYearChange}
+          className="w-full p-2 border rounded bg-background border-input focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <Slider.Track className="bg-muted relative grow rounded-full h-[3px]">
-            <Slider.Range className="absolute bg-primary rounded-full h-full" />
-          </Slider.Track>
-          <Slider.Thumb
-            className="block w-5 h-5 bg-background border-2 border-primary shadow-md rounded-full hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Year start"
-          />
-          <Slider.Thumb
-            className="block w-5 h-5 bg-background border-2 border-primary shadow-md rounded-full hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Year end"
-          />
-        </Slider.Root>
-        <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-          <span>1900</span>
-          <span>{currentYear}</span>
-        </div>
+          {years.map((year) => (
+            <option key={year.label} value={year.value?.toString() || ""}>
+              {year.label}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

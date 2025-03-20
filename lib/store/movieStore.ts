@@ -28,8 +28,7 @@ export const useMovieStore = create<MovieStore>((set) => ({
   error: null,
   filter: {
     type: undefined,
-    yearStart: 1900,
-    yearEnd: new Date().getFullYear(),
+    year: undefined,
   },
 
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -57,8 +56,7 @@ export const useMovieStore = create<MovieStore>((set) => ({
       error: null,
       filter: {
         type: undefined,
-        yearStart: 1900,
-        yearEnd: new Date().getFullYear(),
+        year: undefined,
       },
     }),
 }));

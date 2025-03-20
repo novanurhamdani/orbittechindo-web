@@ -19,10 +19,9 @@ export const movieService = {
         params.type = filter.type;
       }
 
-      // Year filter (OMDb only supports exact year, not range)
-      // We'll handle year ranges in the client
-      if (filter.yearStart && filter.yearStart === filter.yearEnd) {
-        params.y = filter.yearStart;
+      // Add year filter if specified
+      if (filter.year) {
+        params.y = filter.year;
       }
 
       const response = await apiClient.get<SearchResponse>("", { params });

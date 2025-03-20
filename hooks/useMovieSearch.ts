@@ -52,7 +52,30 @@ export function useMovieSearch(initialQuery = "") {
         // Make sure we convert totalResults to a number and pass it to the store
         const totalResults = parseInt(data.totalResults || "0", 10);
 
-        setSearchResults(data.Search, totalResults);
+        // Apply client-side filtering for year
+        if (filter.year) {
+          const filteredResults = data.Search.filter((movie) => {
+            // Handle different year formats (YYYY or YYYY–YYYY)
+            const yearStr = movie.Year;
+            let year: number;
+
+            if (yearStr.includes("–")) {
+              // For series with year ranges like "2018–2023", use the start year
+              year = parseInt(yearStr.split("–")[0]);
+            } else {
+              year = parseInt(yearStr);
+            }
+
+            return !isNaN(year) && year === filter.year;
+          });
+
+          // Update with filtered results and count
+          setSearchResults(filteredResults, totalResults);
+        } else {
+          // No year filtering needed, use API results directly
+          setSearchResults(data.Search, totalResults);
+        }
+
         setError(null);
       } else {
         setSearchResults([], 0);
@@ -63,26 +86,15 @@ export function useMovieSearch(initialQuery = "") {
     if (error) {
       setError((error as Error).message);
     }
-  }, [data, isLoading, error, setSearchResults, setIsLoading, setError]);
-
-  // Client-side filtering for year range
-  // (since OMDb API doesn't support year range directly)
-  useEffect(() => {
-    if (
-      data?.Response === "True" &&
-      data.Search &&
-      data.totalResults &&
-      filter.yearStart &&
-      filter.yearEnd
-    ) {
-      const filteredResults = data.Search.filter((movie) => {
-        const year = parseInt(movie.Year);
-        return year >= filter.yearStart! && year <= filter.yearEnd!;
-      });
-
-      setSearchResults(filteredResults, parseInt(data.totalResults || "0"));
-    }
-  }, [data, filter.yearStart, filter.yearEnd, setSearchResults]);
+  }, [
+    data,
+    isLoading,
+    error,
+    setSearchResults,
+    setIsLoading,
+    setError,
+    filter,
+  ]);
 
   // Function to manually trigger a search
   const search = useCallback(
