@@ -45,6 +45,9 @@ export const movieService = {
       "The Matrix",
       "Avengers",
       "Batman",
+      "The Dark Knight Rises",
+      "Joker",
+      "Captain America",
     ];
 
     const promises = featuredTitles.map((title) =>
@@ -55,7 +58,7 @@ export const movieService = {
 
     // Flatten and take first movie from each search
     return responses
-      .map((response) => response.data.Search?.[0])
+      .map((response) => response.data.Search?.[1])
       .filter((movie) => movie !== undefined);
   },
 };

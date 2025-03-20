@@ -9,10 +9,9 @@ interface MovieDetailProps {
 }
 
 export function MovieDetail({ movie }: MovieDetailProps) {
-  const posterUrl = movie.Poster !== "N/A" 
-    ? movie.Poster 
-    : "/images/placeholder.png";
-  
+  const posterUrl =
+    movie.Poster !== "N/A" ? movie.Poster : "/images/placeholder.png";
+
   const genres = formatGenres(movie.Genre);
 
   return (
@@ -31,11 +30,11 @@ export function MovieDetail({ movie }: MovieDetailProps) {
             />
           </div>
         </div>
-        
+
         {/* Movie info */}
         <div className="p-6 md:col-span-2">
           <h1 className="text-3xl font-bold mb-2">{movie.Title}</h1>
-          
+
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="px-2 py-1 bg-primary/10 text-primary text-sm rounded-full">
               {movie.Year}
@@ -47,7 +46,7 @@ export function MovieDetail({ movie }: MovieDetailProps) {
               {movie.Runtime}
             </span>
           </div>
-          
+
           <div className="mb-6">
             <div className="flex flex-wrap gap-2 mb-4">
               {genres.map((genre) => (
@@ -59,34 +58,44 @@ export function MovieDetail({ movie }: MovieDetailProps) {
                 </span>
               ))}
             </div>
-            
+
             <p className="text-muted-foreground mb-4">{movie.Plot}</p>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Director</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Director
+                </h3>
                 <p>{movie.Director}</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Writer</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Writer
+                </h3>
                 <p>{movie.Writer}</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Actors</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Actors
+                </h3>
                 <p>{movie.Actors}</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Language</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Language
+                </h3>
                 <p>{movie.Language}</p>
               </div>
               {movie.Awards !== "N/A" && (
                 <div className="sm:col-span-2">
-                  <h3 className="text-sm font-medium text-muted-foreground">Awards</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">
+                    Awards
+                  </h3>
                   <p>{movie.Awards}</p>
                 </div>
               )}
             </div>
-            
+
             {/* Ratings */}
             {movie.Ratings && movie.Ratings.length > 0 && (
               <div className="mb-6">
@@ -96,7 +105,7 @@ export function MovieDetail({ movie }: MovieDetailProps) {
                 </div>
               </div>
             )}
-            
+
             {/* Genre distribution */}
             <div>
               <h3 className="text-lg font-medium mb-2">Genre Distribution</h3>
