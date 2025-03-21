@@ -1,23 +1,30 @@
-import { useState, FormEvent, useEffect } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/lib/store/movieStore";
 
-interface SearchBarProps {
-  onSearch: (query: string) => void;
-  initialQuery?: string;
-}
+export function SearchBar() {
+  const [query, setQuery] = useState("");
 
-export function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
-  const [query, setQuery] = useState(initialQuery);
-
-  useEffect(() => {
-    setQuery(initialQuery);
-  }, [initialQuery]);
+  const { setSearchQuery, setCurrentPage } = useMovieStore();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSearch(query.trim());
+    handleSearch(query);
   };
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      if (!query.trim()) {
+        setSearchQuery("");
+        return;
+      }
+
+      setSearchQuery(query);
+      setCurrentPage(1);
+    },
+    [setSearchQuery, setCurrentPage]
+  );
 
   return (
     <form

@@ -25,15 +25,8 @@ export default function Home() {
   } = useAllMovies();
 
   // Get global state from Zustand
-  const {
-    searchQuery,
-    currentPage,
-    filter,
-    setSearchQuery,
-    setCurrentPage,
-    setFilter,
-    addRecentSearch,
-  } = useMovieStore();
+  const { searchQuery, currentPage, filter, setCurrentPage, setFilter } =
+    useMovieStore();
 
   // Use React Query for search with Zustand state
   const {
@@ -44,23 +37,6 @@ export default function Home() {
 
   // Calculate total pages for search results
   const totalPages = Math.ceil(totalResults / 10);
-
-  // Handle search submission
-  const handleSearch = useCallback(
-    (query: string) => {
-      if (!query.trim()) {
-        setSearchQuery("");
-        return;
-      }
-
-      setSearchQuery(query);
-      setCurrentPage(1);
-
-      // Add to recent searches
-      addRecentSearch(query);
-    },
-    [setSearchQuery, setCurrentPage, addRecentSearch]
-  );
 
   // Handle page change for search results
   const handlePageChange = useCallback(
@@ -109,7 +85,7 @@ export default function Home() {
 
         {/* Movie section */}
         <section className="mb-8">
-          <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
+          <SearchBar />
 
           {searchQuery ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

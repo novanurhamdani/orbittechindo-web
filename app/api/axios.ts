@@ -2,7 +2,7 @@ import axios from "axios";
 
 // OMDb API base URL
 const API_URL = "https://www.omdbapi.com/";
-const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY || "ac8e2cf";
+const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
 // Create axios instance
 const apiClient = axios.create({

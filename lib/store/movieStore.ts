@@ -8,20 +8,12 @@ interface MovieStore {
   currentPage: number;
   filter: MovieFilter;
 
-  // User preferences
-  recentSearches: string[];
-
   // Actions
   setSearchQuery: (query: string) => void;
   setCurrentPage: (page: number) => void;
   setFilter: (filter: Partial<MovieFilter>) => void;
-  addRecentSearch: (query: string) => void;
-  clearRecentSearches: () => void;
   resetAll: () => void;
 }
-
-// Maximum number of recent searches to store
-const MAX_RECENT_SEARCHES = 5;
 
 export const useMovieStore = create<MovieStore>((set) => ({
   // Search UI state
@@ -47,24 +39,6 @@ export const useMovieStore = create<MovieStore>((set) => ({
       currentPage: 1,
     })),
 
-  addRecentSearch: (query) =>
-    set((state) => {
-      // Don't add empty queries or duplicates
-      if (!query.trim() || state.recentSearches.includes(query)) {
-        return state;
-      }
-
-      // Add to the beginning and limit the size
-      const newRecentSearches = [query, ...state.recentSearches].slice(
-        0,
-        MAX_RECENT_SEARCHES
-      );
-
-      return { recentSearches: newRecentSearches };
-    }),
-
-  clearRecentSearches: () => set({ recentSearches: [] }),
-
   resetAll: () =>
     set({
       searchQuery: "",
@@ -73,6 +47,5 @@ export const useMovieStore = create<MovieStore>((set) => ({
         type: undefined,
         year: undefined,
       },
-      recentSearches: [],
     }),
 }));
