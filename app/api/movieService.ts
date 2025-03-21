@@ -1,5 +1,5 @@
 import apiClient from "./axios";
-import { MovieFilter, SearchResponse } from "@/types";
+import { MovieDetail, MovieFilter, SearchResponse } from "@/types";
 
 export const movieService = {
   // Search movies by title
@@ -63,7 +63,7 @@ export const movieService = {
     ];
 
     const promises = featuredTitles.map((title) =>
-      apiClient.get<SearchResponse>("", { params: { i: title } })
+      apiClient.get<MovieDetail>("", { params: { i: title } })
     );
 
     try {

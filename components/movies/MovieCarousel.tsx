@@ -2,12 +2,12 @@ import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { Movie } from "@/types";
+import { MovieDetail } from "@/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface MovieCarouselProps {
-  movies: Movie[];
+  movies: MovieDetail[];
   title?: string;
 }
 
