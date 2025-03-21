@@ -1,62 +1,78 @@
 import { create } from "zustand";
-import { Movie, MovieFilter } from "@/types";
+import { MovieFilter } from "@/types";
 
+// MovieStore now focuses on UI state and user preferences only
 interface MovieStore {
+  // Search UI state
   searchQuery: string;
-  searchResults: Movie[];
-  totalResults: number;
   currentPage: number;
-  isLoading: boolean;
-  error: string | null;
   filter: MovieFilter;
 
+  // User preferences
+  recentSearches: string[];
+
+  // Actions
   setSearchQuery: (query: string) => void;
-  setSearchResults: (results: Movie[], total: number) => void;
   setCurrentPage: (page: number) => void;
-  setIsLoading: (isLoading: boolean) => void;
-  setError: (error: string | null) => void;
   setFilter: (filter: Partial<MovieFilter>) => void;
-  resetSearch: () => void;
+  addRecentSearch: (query: string) => void;
+  clearRecentSearches: () => void;
+  resetAll: () => void;
 }
 
+// Maximum number of recent searches to store
+const MAX_RECENT_SEARCHES = 5;
+
 export const useMovieStore = create<MovieStore>((set) => ({
+  // Search UI state
   searchQuery: "",
-  searchResults: [],
-  totalResults: 0,
   currentPage: 1,
-  isLoading: false,
-  error: null,
   filter: {
     type: undefined,
     year: undefined,
   },
 
+  // User preferences
+  recentSearches: [],
+
+  // Actions
   setSearchQuery: (query) => set({ searchQuery: query }),
 
-  setSearchResults: (results, total) =>
-    set({ searchResults: results, totalResults: total }),
-
   setCurrentPage: (page) => set({ currentPage: page }),
-
-  setIsLoading: (isLoading) => set({ isLoading }),
-
-  setError: (error) => set({ error }),
 
   setFilter: (filter) =>
     set((state) => ({
       filter: { ...state.filter, ...filter },
+      // Reset to page 1 when filter changes
+      currentPage: 1,
     })),
 
-  resetSearch: () =>
+  addRecentSearch: (query) =>
+    set((state) => {
+      // Don't add empty queries or duplicates
+      if (!query.trim() || state.recentSearches.includes(query)) {
+        return state;
+      }
+
+      // Add to the beginning and limit the size
+      const newRecentSearches = [query, ...state.recentSearches].slice(
+        0,
+        MAX_RECENT_SEARCHES
+      );
+
+      return { recentSearches: newRecentSearches };
+    }),
+
+  clearRecentSearches: () => set({ recentSearches: [] }),
+
+  resetAll: () =>
     set({
       searchQuery: "",
-      searchResults: [],
-      totalResults: 0,
       currentPage: 1,
-      error: null,
       filter: {
         type: undefined,
         year: undefined,
       },
+      recentSearches: [],
     }),
 }));

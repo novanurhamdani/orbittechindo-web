@@ -15,7 +15,6 @@ import { MovieFilter } from "@/types";
 
 export default function Home() {
   const { featuredMovies, isLoading: isFeaturedLoading } = useFeaturedMovies();
-  const { search, isLoading: isSearchLoading } = useMovieSearch();
   const {
     movies: allMovies,
     isLoading: isAllMoviesLoading,
@@ -25,16 +24,23 @@ export default function Home() {
     handleFilterChange: handleAllMoviesFilterChange,
   } = useAllMovies();
 
+  // Get global state from Zustand
   const {
     searchQuery,
-    searchResults,
-    totalResults,
     currentPage,
     filter,
     setSearchQuery,
     setCurrentPage,
     setFilter,
+    addRecentSearch,
   } = useMovieStore();
+
+  // Use React Query for search with Zustand state
+  const {
+    movies: searchResults,
+    totalResults,
+    isLoading: isSearchLoading,
+  } = useMovieSearch(searchQuery, currentPage, filter);
 
   // Calculate total pages for search results
   const totalPages = Math.ceil(totalResults / 10);
@@ -49,9 +55,11 @@ export default function Home() {
 
       setSearchQuery(query);
       setCurrentPage(1);
-      search(query, 1, filter);
+
+      // Add to recent searches
+      addRecentSearch(query);
     },
-    [filter, search, setCurrentPage, setSearchQuery]
+    [setSearchQuery, setCurrentPage, addRecentSearch]
   );
 
   // Handle page change for search results
@@ -60,7 +68,6 @@ export default function Home() {
       if (!searchQuery.trim()) return;
 
       setCurrentPage(page);
-      search(searchQuery, page, filter);
 
       // Scroll to top of the page
       window.scrollTo({
@@ -68,7 +75,7 @@ export default function Home() {
         behavior: "smooth",
       });
     },
-    [filter, search, searchQuery, setCurrentPage]
+    [searchQuery, setCurrentPage]
   );
 
   // Handle filter change for search results
@@ -77,10 +84,8 @@ export default function Home() {
       if (!searchQuery.trim()) return;
 
       setFilter(newFilter);
-      setCurrentPage(1);
-      search(searchQuery, 1, newFilter);
     },
-    [search, searchQuery, setCurrentPage, setFilter]
+    [searchQuery, setFilter]
   );
 
   return (
