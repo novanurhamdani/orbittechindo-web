@@ -52,28 +52,28 @@ export const movieService = {
 
   // Get featured movies (for carousel)
   getFeaturedMovies: async () => {
-    // Get a few featured movies by searching for popular titles
+    // Get a few featured movies by searching for popular titles identified by IMDb ID
     const featuredTitles = [
-      "Inception",
-      "Interstellar",
-      "The Matrix",
-      "Avengers",
-      "Batman",
-      "The Dark Knight Rises",
-      "Joker",
-      "Captain America",
+      "tt4154796", // Avengers: Endgame
+      "tt4415360", // Interstellar
+      "tt1490017", // The Lego Movie
+      "tt6718170", // The Super Mario Bros. Movie
+      "tt4116284", // The Legend Batman
+      "tt11032374", // Demon Slayer
     ];
 
     const promises = featuredTitles.map((title) =>
-      apiClient.get<SearchResponse>("", { params: { s: title, page: 1 } })
+      apiClient.get<SearchResponse>("", { params: { i: title } })
     );
 
-    const responses = await Promise.all(promises);
+    try {
+      const responses = await Promise.all(promises);
 
-    // Flatten and take first movie from each search
-    return responses
-      .map((response) => response.data.Search?.[1])
-      .filter((movie) => movie !== undefined);
+      return responses.map((response) => response.data).filter(Boolean);
+    } catch (error) {
+      console.error("Error fetching featured movies:", error);
+      return [];
+    }
   },
 
   getAllMovies: async (
