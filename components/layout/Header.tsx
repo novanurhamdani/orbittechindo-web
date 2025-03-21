@@ -11,7 +11,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuthStore();
-  const { setSearchQuery } = useMovieStore();
+  const { resetAll } = useMovieStore();
   const { favorites } = useFavoritesStore();
 
   const handleLogout = async () => {
@@ -24,7 +24,7 @@ export function Header() {
   };
 
   const handleHomeClick = () => {
-    setSearchQuery("");
+    resetAll();
   };
 
   // Animation variants

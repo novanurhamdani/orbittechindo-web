@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
 import { MainLayout } from "@/components/layout";
 import {
   MovieCarousel,
@@ -11,22 +10,19 @@ import {
 } from "../components/movies";
 import { useFeaturedMovies, useMovieSearch, useAllMovies } from "@/hooks";
 import { useMovieStore } from "@/lib/store";
-import { MovieFilter } from "@/types";
 
 export default function Home() {
   const { featuredMovies, isLoading: isFeaturedLoading } = useFeaturedMovies();
+
+  // Get global state from Zustand
+  const { searchQuery, currentPage, filter } = useMovieStore();
+
+  // Use React Query for filter all movie with Zustand state
   const {
     movies: allMovies,
     isLoading: isAllMoviesLoading,
-    currentPage: allMoviesPage,
     totalPages: allMoviesTotalPages,
-    handlePageChange: handleAllMoviesPageChange,
-    handleFilterChange: handleAllMoviesFilterChange,
-  } = useAllMovies();
-
-  // Get global state from Zustand
-  const { searchQuery, currentPage, filter, setCurrentPage, setFilter } =
-    useMovieStore();
+  } = useAllMovies(currentPage, filter);
 
   // Use React Query for search with Zustand state
   const {
@@ -37,32 +33,6 @@ export default function Home() {
 
   // Calculate total pages for search results
   const totalPages = Math.ceil(totalResults / 10);
-
-  // Handle page change for search results
-  const handlePageChange = useCallback(
-    (page: number) => {
-      if (!searchQuery.trim()) return;
-
-      setCurrentPage(page);
-
-      // Scroll to top of the page
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    },
-    [searchQuery, setCurrentPage]
-  );
-
-  // Handle filter change for search results
-  const handleFilterChange = useCallback(
-    (newFilter: MovieFilter) => {
-      if (!searchQuery.trim()) return;
-
-      setFilter(newFilter);
-    },
-    [searchQuery, setFilter]
-  );
 
   return (
     <MainLayout>
@@ -90,10 +60,7 @@ export default function Home() {
           {searchQuery ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Filters for search results */}
-              <MovieFilters
-                initialFilter={filter}
-                onFilterChange={handleFilterChange}
-              />
+              <MovieFilters />
 
               {/* Results */}
               <div className="md:col-span-3">
@@ -103,23 +70,14 @@ export default function Home() {
                     : `Results for "${searchQuery}" (${totalResults} found)`}
                 </h2>
                 <MovieGrid movies={searchResults} isLoading={isSearchLoading} />
-                {totalResults > 0 && (
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                  />
-                )}
+                {totalResults > 0 && <Pagination totalPages={totalPages} />}
               </div>
             </div>
           ) : (
             <div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {/* Filters for all movies */}
-                <MovieFilters
-                  initialFilter={{}}
-                  onFilterChange={handleAllMoviesFilterChange}
-                />
+                <MovieFilters />
                 <div className="md:col-span-3">
                   <h2 className="text-xl font-semibold mb-4">All Movies</h2>
                   <MovieGrid
@@ -127,11 +85,7 @@ export default function Home() {
                     isLoading={isAllMoviesLoading}
                   />
                   {allMoviesTotalPages > 0 && (
-                    <Pagination
-                      currentPage={allMoviesPage}
-                      totalPages={allMoviesTotalPages}
-                      onPageChange={handleAllMoviesPageChange}
-                    />
+                    <Pagination totalPages={allMoviesTotalPages} />
                   )}
                 </div>
               </div>

@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MovieFilter } from "@/types";
+import { useMovieStore } from "@/lib/store/movieStore";
 
-interface MovieFiltersProps {
-  initialFilter: MovieFilter;
-  onFilterChange: (filter: MovieFilter) => void;
-}
-
-export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProps) {
-  const [filter, setFilter] = useState<MovieFilter>(initialFilter);
+export function MovieFilters() {
+  const [filter, setFilter] = useState<MovieFilter>({});
   const currentYear = new Date().getFullYear();
-  
+  const { setFilter: setFilterParam } = useMovieStore();
+
   // Movie types for the select dropdown
   const movieTypes = [
     { value: "", label: "All Types" },
@@ -17,7 +14,7 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
     { value: "series", label: "Series" },
     { value: "episode", label: "Episodes" },
   ];
-  
+
   // Generate years from 1970 to current year
   const years = [
     { value: undefined, label: "All Years" },
@@ -27,10 +24,17 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
     }),
   ];
 
+  const handleFilterChange = useCallback(
+    (newFilter: MovieFilter) => {
+      setFilterParam(newFilter);
+    },
+    [setFilterParam]
+  );
+
   // Update parent component when filter changes
   useEffect(() => {
-    onFilterChange(filter);
-  }, [filter, onFilterChange]);
+    handleFilterChange(filter);
+  }, [filter, handleFilterChange]);
 
   // Handle type change
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -52,10 +56,13 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
   return (
     <div className="glass-card p-5 rounded-lg shadow-lg">
       <h3 className="text-lg font-medium mb-5 text-white/90">Filters</h3>
-      
+
       {/* Type filter */}
       <div className="mb-6">
-        <label htmlFor="type-filter" className="block text-sm font-medium mb-2 text-white/80">
+        <label
+          htmlFor="type-filter"
+          className="block text-sm font-medium mb-2 text-white/80"
+        >
           Type
         </label>
         <select
@@ -71,10 +78,13 @@ export function MovieFilters({ initialFilter, onFilterChange }: MovieFiltersProp
           ))}
         </select>
       </div>
-      
+
       {/* Year filter */}
       <div>
-        <label htmlFor="year-filter" className="block text-sm font-medium mb-2 text-white/80">
+        <label
+          htmlFor="year-filter"
+          className="block text-sm font-medium mb-2 text-white/80"
+        >
           Year
         </label>
         <select

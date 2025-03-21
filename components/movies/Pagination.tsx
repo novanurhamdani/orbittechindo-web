@@ -1,17 +1,14 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/lib/store/movieStore";
 
 interface PaginationProps {
-  currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
 }
 
-export function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: PaginationProps) {
+export function Pagination({ totalPages }: PaginationProps) {
+  const { currentPage, setCurrentPage } = useMovieStore();
+
   // If there's only one page, don't show pagination
   if (totalPages <= 1) {
     return null;
@@ -63,6 +60,15 @@ export function Pagination({
 
   const pageNumbers = getPageNumbers();
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+    // Scroll to top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <nav className="flex justify-center mt-8">
       <ul className="flex items-center space-x-1">
@@ -71,7 +77,7 @@ export function Pagination({
           <Button
             variant="outline"
             size="icon"
-            onClick={() => onPageChange(currentPage - 1)}
+            onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
             className="cursor-pointer"
             aria-label="Previous page"
@@ -88,7 +94,9 @@ export function Pagination({
             ) : (
               <Button
                 variant={currentPage === page ? "orange" : "outline"}
-                onClick={() => typeof page === "number" && onPageChange(page)}
+                onClick={() =>
+                  typeof page === "number" && handlePageChange(page)
+                }
                 className="min-w-[40px]"
               >
                 {page}
@@ -102,7 +110,7 @@ export function Pagination({
           <Button
             variant="outline"
             size="icon"
-            onClick={() => onPageChange(currentPage + 1)}
+            onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             aria-label="Next page"
             className="cursor-pointer"
